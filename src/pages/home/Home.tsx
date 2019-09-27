@@ -10,36 +10,56 @@ import { MenuButton } from "../../components/MenuButton";
 import { Radio } from "../../components/Radio";
 
 export function Home() {
+  const [selectedCategories, setSelectedCategories] = useState(["all"]);
+  const [selectedPrices, setSelectedPrices] = useState(["all"]);
+
   const { loading, data, error, refetch } = useQuery(query, {
     variables: {
-      categories: "restaurants",
+      categories: selectedCategories
+        .map(category => (category === "all" ? "restaurants" : category))
+        .join(","),
       location: "charlotte",
-      limit: 5,
-      openNow: true
+      limit: 15,
+      openNow: true,
+      price: selectedPrices
+        .map((price, index) =>
+          price === "all" ? "1,2,3,4" : (index + 1).toString()
+        )
+        .join(",")
     }
   });
-  const [selectedPrice, setSelectedPrice] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedOpenNow, setSelectedOpenNow] = useState("");
 
-  if (loading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
 
   function handlePriceMenuChange(e) {
-    setSelectedPrice(e.target.value);
+    const updatedPrices =
+      e.target.value === "all"
+        ? ["all"]
+        : selectedPrices
+            .filter(price => price !== "all")
+            .concat(e.target.value);
+
+    setSelectedPrices(updatedPrices);
   }
   function handleSelectedCategoryChange(e) {
-    setSelectedCategory(e.target.value);
+    const updatedCategories =
+      e.target.value === "all"
+        ? ["all"]
+        : selectedCategories
+            .filter(category => category !== "all")
+            .concat(e.target.value);
+
+    setSelectedCategories(updatedCategories);
   }
+
   function handleOpenNowChange(e) {
-    console.log(selectedOpenNow);
-    console.log(e.target.value);
     setSelectedOpenNow(selectedOpenNow ? "" : e.target.value);
   }
 
   const {
     search: { business }
-  } = data;
+  } = data || { search: {} };
 
   function renderPriceMenuButton() {
     return (
@@ -50,9 +70,8 @@ export function Home() {
             <Label>
               <Radio
                 value={price.value}
-                selected={selectedPrice}
-                onChange={handlePriceMenuChange}
-              ></Radio>
+                selected={mapSelected(selectedPrices, price.value)}
+                onChange={handlePriceMenuChange}></Radio>
               {price.name}
             </Label>
           </MenuButton.Item>
@@ -70,9 +89,8 @@ export function Home() {
             <Label>
               <Radio
                 value={category.value}
-                selected={selectedCategory}
-                onChange={handleSelectedCategoryChange}
-              ></Radio>
+                selected={mapSelected(selectedCategories, category.value)}
+                onChange={handleSelectedCategoryChange}></Radio>
               {category.name}
             </Label>
           </MenuButton.Item>
@@ -82,20 +100,18 @@ export function Home() {
   }
 
   function renderOpenNowButton() {
-    console.log(selectedOpenNow);
     return (
       <Label
         className={css`
           border-bottom: solid 1px #c8c8c8;
           padding: 8px;
-        `}
-      >
+          color: #002b56;
+        `}>
         <Radio
           value={"open_now"}
           selected={selectedOpenNow}
           onChange={() => {}}
-          onClick={handleOpenNowChange}
-        ></Radio>
+          onClick={handleOpenNowChange}></Radio>
         Open Now
       </Label>
     );
@@ -108,8 +124,7 @@ export function Home() {
           description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mauris
 					magna, gravida non felis aliquet, sollicitudin dapibus est. Mauris
 					suscipit, massa sed ultrices ultrices, ante."
-          title="Restaurants"
-        ></Hero>
+          title="Restaurants"></Hero>
       </Header>
       <Toolbar className="toolbar">
         <span className={spacerCls}>Filter By:</span>
@@ -125,18 +140,19 @@ export function Home() {
               color: 333333;
               line-height: 40px;
               font-weight: 300;
-            `}
-          >
+            `}>
             All Restaurants
           </h2>
-          <RestaurantGrid>
-            {business.map((row, idx) => (
-              <RestaurantCard
-                key={"card" + idx}
-                restaurant={row}
-              ></RestaurantCard>
-            ))}
-          </RestaurantGrid>
+
+          {!loading && (
+            <RestaurantGrid>
+              {business.map((row, idx) => (
+                <RestaurantCard
+                  key={"card" + idx}
+                  restaurant={row}></RestaurantCard>
+              ))}
+            </RestaurantGrid>
+          )}
         </div>
       </Content>
     </Main>
@@ -209,3 +225,6 @@ const categories = [
   { value: "mexican", name: "Mexican" },
   { value: "thai", name: "Thai" }
 ];
+
+const mapSelected = (selectedItems, currentValue) =>
+  selectedItems.find(selected => selected === currentValue);

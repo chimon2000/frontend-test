@@ -1,4 +1,5 @@
 type Restaurant = {
+  id: string;
   name: string;
   rating: number;
   price: string;
