@@ -1,22 +1,24 @@
 import React, { PropsWithChildren } from "react";
 import styled from "@emotion/styled";
 
-type ButtonProps = PropsWithChildren<{
-  variant?: "primary" | "secondary";
-  onClick?;
-}>;
-
 export function Button({
   variant = "primary",
+  className,
   children,
   onClick
 }: ButtonProps) {
   return (
-    <Wrapper variant={variant} onClick={onClick}>
+    <Wrapper variant={variant} onClick={onClick} className={className}>
       {children}
     </Wrapper>
   );
 }
+
+type ButtonProps = PropsWithChildren<{
+  variant?: "primary" | "secondary";
+  onClick?;
+  className?;
+}>;
 
 const Wrapper = styled("button")<Pick<ButtonProps, "variant">>`
   border: none;
