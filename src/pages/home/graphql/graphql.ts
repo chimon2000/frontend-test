@@ -3,10 +3,10 @@ import { gql } from "apollo-boost";
 export const query = gql`
   query search(
     $categories: String!
-    $location: String!
-    $limit: Int!
-    $openNow: Boolean!
     $price: String!
+    $location: String
+    $openNow: Boolean
+    $limit: Int
   ) {
     search(
       categories: $categories
