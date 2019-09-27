@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { useQuery } from "@apollo/react-hooks";
 import { useParams } from "react-router";
 import { query } from "./graphql";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 import ReactMapGL, { Marker } from "react-map-gl";
 
 import { Hero } from "../../components/Hero";
@@ -11,6 +11,7 @@ import { Comment } from "../../components/Comment";
 import { RestaurantStarRating } from "../../components/RestaurantStarRating";
 import MarkerIcon from "../../components/icons/MarkerIcon";
 import DotIcon from "../../components/icons/DotIcon";
+import { displayFlexCls, alignItemsCenterCls } from "../../styles/util";
 
 function Restaurant() {
   let { id } = useParams();
@@ -39,11 +40,7 @@ function Restaurant() {
           <span>
             {business.categories[0].title} • {business.price}
           </span>
-          <span
-            className={css`
-              display: flex;
-              align-items: center;
-            `}>
+          <span className={cx(displayFlexCls, alignItemsCenterCls)}>
             <DotIcon
               className={css`
                 height: 1em;
@@ -59,10 +56,7 @@ function Restaurant() {
         </div>
       </Summary>
       <Detail className="detail">
-        <div
-          className={css`
-            display: flex;
-          `}>
+        <div className={displayFlexCls}>
           <ReactMapGL
             width={400}
             height={200}
@@ -100,6 +94,13 @@ function Restaurant() {
             />
           ))}
         </div>
+        <div
+          className={css`
+            margin-top: 0.5em;
+          `}>
+          {business.location.address1} {business.location.city},{" "}
+          {business.location.state} {business.location.postal_code}
+        </div>
       </Detail>
       <CommentSummary className="comments">
         <div
@@ -111,8 +112,8 @@ function Restaurant() {
           `}>
           {business.review_count} Reviews
         </div>
-        {business.reviews.map(review => (
-          <Comment review={review}></Comment>
+        {business.reviews.map((review, idx) => (
+          <Comment key={`review${idx}`} review={review}></Comment>
         ))}
       </CommentSummary>
     </Main>

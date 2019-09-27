@@ -1,16 +1,12 @@
 import React from "react";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 import { CheckIcon } from "./icons/CheckIcon";
 import { OvalIcon } from "./icons/OvalIcon";
+import { displayFlexCls, alignItemsCenterCls } from "../styles/util";
 
 export function Radio({ value, selected, onChange, onClick }: RadioProps) {
   return (
-    <span
-      className={css`
-        display: flex;
-        align-items: center;
-      `}
-    >
+    <span className={cx(displayFlexCls, alignItemsCenterCls)}>
       <input
         className={css`
           display: none;
@@ -19,14 +15,12 @@ export function Radio({ value, selected, onChange, onClick }: RadioProps) {
         value={value}
         onChange={onChange}
         onClick={onClick}
-        checked={value === selected}
-      ></input>
+        checked={value === selected}></input>
       {selected === value ? <CheckIcon></CheckIcon> : <OvalIcon></OvalIcon>}
       <span
         className={css`
           margin-right: 0.5em;
-        `}
-      ></span>
+        `}></span>
     </span>
   );
 }

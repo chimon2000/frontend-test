@@ -1,9 +1,14 @@
 import React, { PropsWithChildren } from "react";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 import { Button } from "./Button";
 import { RestaurantStarRating } from "./RestaurantStarRating";
 import { Link } from "react-router-dom";
 import DotIcon from "./icons/DotIcon";
+import {
+  displayFlexCls,
+  alignItemsCenterCls,
+  transformUppercaseCls
+} from "../styles/util";
 
 type RestaurantCardProps = PropsWithChildren<{
   restaurant: Restaurant;
@@ -38,11 +43,11 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           {restaurant.categories[0].title} {restaurant.price}
         </span>
         <span
-          className={css`
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-          `}>
+          className={cx(
+            transformUppercaseCls,
+            displayFlexCls,
+            alignItemsCenterCls
+          )}>
           <DotIcon
             className={css`
               height: 10px;
@@ -56,9 +61,20 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           </span>
         </span>
       </div>
-      <Link to={`/restaurants/${restaurant.id}`}>
-        <Button>Learn More</Button>
+      <Link
+        to={`/restaurants/${restaurant.id}`}
+        className={cx(displayFlexCls, linkCls)}>
+        <Button
+          className={css`
+            flex: 1;
+          `}>
+          Learn More
+        </Button>
       </Link>
     </div>
   );
 }
+
+const linkCls = css`
+  text-decoration: none;
+`;

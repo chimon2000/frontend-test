@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { RestaurantGrid } from "../../components/RestaurantGrid";
 import { RestaurantCard } from "../../components/RestaurantCard";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 import styled from "@emotion/styled";
 import { Hero } from "../../components/Hero";
 import { query } from "./graphql";
 import { MenuButton } from "../../components/MenuButton";
 import { Radio } from "../../components/Radio";
 import { Button } from "../../components/Button";
+import { displayFlexCls, alignItemsCenterCls } from "../../styles/util";
 
 export function Home() {
   const [selectedCategories, setSelectedCategories] = useState(["all"]);
@@ -133,7 +134,7 @@ export function Home() {
 					suscipit, massa sed ultrices ultrices, ante."
           title="Restaurants"></Hero>
       </Header>
-      <Toolbar className="toolbar">
+      <Toolbar className={cx("toolbar", displayFlexCls, alignItemsCenterCls)}>
         <span>
           <span className={spacerCls}>Filter By:</span>
           <span className={spacerCls}>{renderOpenNowButton()}</span>
@@ -158,13 +159,22 @@ export function Home() {
           </h2>
 
           {!loading && (
-            <RestaurantGrid>
-              {business.map((row, idx) => (
-                <RestaurantCard
-                  key={"card" + idx}
-                  restaurant={row}></RestaurantCard>
-              ))}
-            </RestaurantGrid>
+            <>
+              <RestaurantGrid>
+                {business.map((row, idx) => (
+                  <RestaurantCard
+                    key={"card" + idx}
+                    restaurant={row}></RestaurantCard>
+                ))}
+              </RestaurantGrid>
+              <div
+                className={css`
+                  margin-top: 1em;
+                  text-align: center;
+                `}>
+                <Button variant="secondary">Load more</Button>
+              </div>
+            </>
           )}
         </div>
       </Content>
@@ -181,8 +191,6 @@ const Toolbar = styled("div")`
   border-bottom: solid #e6e6e6 1px;
   padding: 20px 40px;
   margin: 20px 0;
-  display: flex;
-  align-items: center;
   justify-content: space-between;
 `;
 
