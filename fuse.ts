@@ -1,4 +1,4 @@
-import { fusebox, sparky } from "fuse-box";
+import { fusebox, sparky, pluginCSS } from "fuse-box";
 import { IDevServerProps } from "fuse-box/dev-server/devServerProps";
 import dotenv from "dotenv";
 dotenv.config();
@@ -24,7 +24,8 @@ class Context {
         template: "src/index.html"
       },
       cache: true,
-      devServer: this.runServer
+      devServer: this.runServer,
+      plugins: [pluginCSS()]
     });
 }
 const { task } = sparky<Context>(Context);
