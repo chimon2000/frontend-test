@@ -2,6 +2,9 @@ import React, { PropsWithChildren } from "react";
 import { css } from "emotion";
 import { Button } from "./Button";
 import { RestaurantStarRating } from "./RestaurantStarRating";
+import { Link } from "react-router-dom";
+import DotIcon from "./icons/DotIcon";
+
 type RestaurantCardProps = PropsWithChildren<{
   restaurant: Restaurant;
 }>;
@@ -16,8 +19,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         > :not(:last-child) {
           margin-bottom: 10px;
         }
-      `}
-    >
+      `}>
       <img
         className={css`
           height: 200px;
@@ -30,20 +32,33 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         className={css`
           display: flex;
           justify-content: space-between;
-        `}
-      >
+          color: #757575;
+        `}>
         <span>
           {restaurant.categories[0].title} {restaurant.price}
         </span>
         <span
           className={css`
             text-transform: uppercase;
-          `}
-        >
-          {restaurant.hours[0].is_open_now ? "open now" : "closed"}
+            display: flex;
+            align-items: center;
+          `}>
+          <DotIcon
+            className={css`
+              height: 10px;
+            `}
+            filled={restaurant.hours[0].is_open_now}></DotIcon>
+          <span
+            className={css`
+              margin-left: 0.5em;
+            `}>
+            {restaurant.hours[0].is_open_now ? "open now" : "closed"}
+          </span>
         </span>
       </div>
-      <Button>Learn More</Button>
+      <Link to={`/restaurants/${restaurant.id}`}>
+        <Button>Learn More</Button>
+      </Link>
     </div>
   );
 }
