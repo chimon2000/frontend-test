@@ -6,15 +6,18 @@ export const query = gql`
     $location: String!
     $limit: Int!
     $openNow: Boolean!
+    $price: String!
   ) {
     search(
       categories: $categories
       location: $location
       limit: $limit
       open_now: $openNow
+      price: $price
     ) {
       total
       business {
+        id
         name
         rating
         price
@@ -25,11 +28,6 @@ export const query = gql`
         categories {
           alias
           title
-        }
-        reviews {
-          text
-          rating
-          url
         }
       }
     }
