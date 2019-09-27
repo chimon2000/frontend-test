@@ -1,8 +1,9 @@
 import React from "react";
+import styled from "@emotion/styled";
 
 export function MarkerIcon({ className }: { className? }) {
   return (
-    <svg
+    <Svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 42 66"
@@ -19,8 +20,12 @@ export function MarkerIcon({ className }: { className? }) {
         d="M21 35c7.732 0 14-6.268 14-14S28.732 7 21 7 7 13.268 7 21s6.268 14 14 14z"
         clipRule="evenodd"
       />
-    </svg>
+    </Svg>
   );
 }
 
 export default MarkerIcon;
+
+const Svg = styled("svg")`
+  height: 40px;
+`;
