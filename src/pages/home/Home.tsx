@@ -172,7 +172,7 @@ export function Home() {
                   margin-top: 1em;
                   text-align: center;
                 `}>
-                <Button variant="secondary">Load more</Button>
+                <LoadMoreButton variant="secondary">Load more</LoadMoreButton>
               </div>
             </>
           )}
@@ -218,6 +218,10 @@ const Main = styled("div")`
   .content {
     grid-area: content;
   }
+`;
+
+const LoadMoreButton = styled(Button)`
+  width: 32em;
 `;
 
 const Label = styled("label")`
