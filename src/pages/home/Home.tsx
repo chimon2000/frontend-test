@@ -8,10 +8,12 @@ import { Hero } from "../../components/Hero";
 import { query } from "./graphql";
 import { MenuButton } from "../../components/MenuButton";
 import { Radio } from "../../components/Radio";
+import { Button } from "../../components/Button";
 
 export function Home() {
   const [selectedCategories, setSelectedCategories] = useState(["all"]);
   const [selectedPrices, setSelectedPrices] = useState(["all"]);
+  const [selectedOpenNow, setSelectedOpenNow] = useState();
 
   const { loading, data, error, refetch } = useQuery(query, {
     variables: {
@@ -20,7 +22,7 @@ export function Home() {
         .join(","),
       location: "charlotte",
       limit: 15,
-      openNow: true,
+      openNow: !!selectedOpenNow,
       price: selectedPrices
         .map((price, index) =>
           price === "all" ? "1,2,3,4" : (index + 1).toString()
@@ -28,7 +30,6 @@ export function Home() {
         .join(",")
     }
   });
-  const [selectedOpenNow, setSelectedOpenNow] = useState("");
 
   if (error) return <div>{error.message}</div>;
 
@@ -54,7 +55,13 @@ export function Home() {
   }
 
   function handleOpenNowChange(e) {
-    setSelectedOpenNow(selectedOpenNow ? "" : e.target.value);
+    setSelectedOpenNow(selectedOpenNow ? undefined : e.target.value);
+  }
+
+  function handleClearAllClicked() {
+    setSelectedOpenNow(undefined);
+    setSelectedCategories(["all"]);
+    setSelectedPrices(["all"]);
   }
 
   const {
@@ -66,7 +73,7 @@ export function Home() {
       <MenuButton>
         <MenuButton.Button>Price</MenuButton.Button>
         {prices.map(price => (
-          <MenuButton.Item>
+          <MenuButton.Item key={`${price.name}`}>
             <Label>
               <Radio
                 value={price.value}
@@ -85,7 +92,7 @@ export function Home() {
       <MenuButton>
         <MenuButton.Button>Category</MenuButton.Button>
         {categories.map(category => (
-          <MenuButton.Item>
+          <MenuButton.Item key={`${category.name}`}>
             <Label>
               <Radio
                 value={category.value}
@@ -127,10 +134,16 @@ export function Home() {
           title="Restaurants"></Hero>
       </Header>
       <Toolbar className="toolbar">
-        <span className={spacerCls}>Filter By:</span>
-        <span className={spacerCls}>{renderOpenNowButton()}</span>
-        <span className={spacerCls}>{renderPriceMenuButton()}</span>
-        {renderCategoryMenuButton()}
+        <span>
+          <span className={spacerCls}>Filter By:</span>
+          <span className={spacerCls}>{renderOpenNowButton()}</span>
+          <span className={spacerCls}>{renderPriceMenuButton()}</span>
+          {renderCategoryMenuButton()}
+        </span>
+
+        <Button variant="secondary" onClick={handleClearAllClicked}>
+          Clear All
+        </Button>
       </Toolbar>
       <Content className="content">
         <div>
@@ -170,6 +183,7 @@ const Toolbar = styled("div")`
   margin: 20px 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 
 const Content = styled("article")`
