@@ -22,7 +22,7 @@ export function RestaurantStarRating({
           ? "half"
           : "empty";
 
-      return <StarIcon fill={fill}></StarIcon>;
+      return <StarIcon key={`rating-${starRating}`} fill={fill}></StarIcon>;
     });
 
   return <div>{stars}</div>;
